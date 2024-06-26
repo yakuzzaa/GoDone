@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/yakuzzaa/GoDone/apiGateway"
+	_ "github.com/yakuzzaa/GoDone/apiGateway/cmd/docs"
 	"github.com/yakuzzaa/GoDone/apiGateway/pkg/handler"
 	"log"
 )
