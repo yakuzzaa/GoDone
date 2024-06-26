@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package item;
+
+option go_package = "grpc/gen";
+
+service ItemService {
+  rpc GetAllItems (GetAllItemsRequest) returns (GetAllItemsResponse);
+  rpc GetItemById (GetItemByIdRequest) returns (GetItemByIdResponse);
+  rpc CreateItem (CreateItemRequest) returns (CreateItemResponse);
+  rpc UpdateItem (UpdateItemRequest) returns (UpdateItemResponse);
+  rpc DeleteItem (DeleteItemRequest) returns (DeleteItemResponse);
+}
+
+message GetAllItemsRequest {
+  int64 list_id = 1;
+}
+message GetAllItemsResponse {
+  repeated Item items = 1;
+}
+
+message GetItemByIdRequest {
+  int64 id = 1;
+}
+message GetItemByIdResponse {
+  Item item = 1;
+}
+
+message CreateItemRequest {
+  int64 list_id = 1;
+  string title = 2;
+  string description = 3;
+}
+message CreateItemResponse {
+  int64 id = 1;
+}
+
+message UpdateItemRequest {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+  bool done = 4;
+}
+message UpdateItemResponse {
+  int64 id = 1;
+}
+
+message DeleteItemRequest {
+  int64 id = 1;
+}
+message DeleteItemResponse {}
+
+message Item {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+  bool done = 4;
+}
