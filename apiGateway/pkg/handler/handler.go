@@ -1,12 +1,20 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
 
 type Handler struct {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+	docs := router.Group("/docs")
+	{
+		docs.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
