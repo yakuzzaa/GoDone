@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package list;
+option go_package = "grpc/gen";
+
+service ListService {
+  rpc GetAllLists (GetAllListsRequest) returns (GetAllListsResponse);
+  rpc GetListById (GetListByIdRequest) returns (GetListByIdResponse);
+  rpc CreateList (CreateListRequest) returns (CreateListResponse);
+  rpc UpdateList (UpdateListRequest) returns (UpdateListResponse);
+  rpc DeleteList (DeleteListRequest) returns (DeleteListResponse);
+}
+
+message GetAllListsRequest {}
+message GetAllListsResponse {
+  repeated List lists = 1;
+}
+
+message GetListByIdRequest {
+  int64 id = 1;
+}
+message GetListByIdResponse {
+  List list = 1;
+}
+
+message CreateListRequest {
+  string title = 1;
+  string description = 2;
+}
+message CreateListResponse {
+  int64 id = 1;
+}
+
+message UpdateListRequest {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+}
+message UpdateListResponse {
+  List list = 1;
+}
+
+message DeleteListRequest {
+  int64 id = 1;
+}
+message DeleteListResponse {}
+
+message List {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+}
