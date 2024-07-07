@@ -1,10 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"github.com/yakuzzaa/GoDone/backendService/internal/config"
 	"github.com/yakuzzaa/GoDone/backendService/internal/grpc"
 	"github.com/yakuzzaa/GoDone/backendService/internal/storage"
-	"log"
 )
 
 func main() {

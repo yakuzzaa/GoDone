@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"fmt"
+	"net"
+
 	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1"
 	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/item_v1"
 	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/list_v1"
@@ -12,7 +14,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"gorm.io/gorm"
-	"net"
 )
 
 func SetupGRPCServer(cfg *config.Config, db *gorm.DB) (*grpc.Server, net.Listener, error) {

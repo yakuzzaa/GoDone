@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+
 	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1"
 	"github.com/yakuzzaa/GoDone/backendService/internal/models"
 	"golang.org/x/crypto/bcrypt"

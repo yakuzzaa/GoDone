@@ -1,11 +1,12 @@
 package service
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1"
 	"github.com/yakuzzaa/GoDone/backendService/internal/grpc/repository"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 const (
