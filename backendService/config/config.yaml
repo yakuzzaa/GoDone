@@ -5,3 +5,6 @@ db:
   db_user: "postgres"
   db_password: "postgres"
   db_name: "godone_db"
+grpc:
+  port: 50051
+  timeout: 10h

@@ -2,26 +2,34 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "grpc/gen";
+option go_package = "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1;auth_v1";
 
-service Auth {
+service AuthV1 {
   rpc signIn (SignInRequest) returns (SignInResponse);
   rpc signUp (SignUpRequest) returns (SignUpResponse);
 }
 
-message SignInRequest {
+message SignInInfo {
   string name = 1;
   string username = 2;
   string password = 3;
 }
 
+message SignUpInfo {
+  string username = 1;
+  string password = 2;
+}
+
+message SignInRequest {
+    SignInInfo info = 1;
+}
+
 message SignInResponse {
-  int64 id = 1;
+  uint64 id = 1;
 }
 
 message SignUpRequest {
-  string username = 1;
-  string password = 2;
+    SignUpInfo info = 1;
 
 }
 

@@ -5,11 +5,13 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"os"
+	"time"
 )
 
 type Config struct {
-	Env      string `yaml:"env" env-default:"local" env-required:"true"`
-	Database `yaml:"db"`
+	Env        string `yaml:"env" env-default:"local" env-required:"true"`
+	Database   `yaml:"db"`
+	GRPCConfig `yaml:"grpc"`
 }
 
 type Database struct {
@@ -18,6 +20,11 @@ type Database struct {
 	DBUser     string `yaml:"db_user" env-required:"true"`
 	DBPassword string `yaml:"db_password" env-required:"true"`
 	DBName     string `yaml:"db_name" env-required:"true"`
+}
+
+type GRPCConfig struct {
+	Port    int           `yaml:"port" env-required:"true"`
+	Timeout time.Duration `yaml:"timeout" env-required:"true"`
 }
 
 func (c *Database) DSN() string {

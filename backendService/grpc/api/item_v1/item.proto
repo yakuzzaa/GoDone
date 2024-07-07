@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package item;
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/item_v1;item_v1";
+
+service ItemV1 {
+  rpc ListItem (ListRequest) returns (ListResponse);
+  rpc GetItem (GetRequest) returns (GetResponse);
+  rpc CreateItem (CreateRequest) returns (CreateResponse);
+  rpc UpdateItem (UpdateRequest) returns (google.protobuf.Empty);
+  rpc DeleteItem (DeleteRequest) returns (google.protobuf.Empty);
+}
+
+message Item {
+  uint64 id = 1;
+  ItemInfo info = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+
+message ItemInfo {
+  string title = 1;
+  string description = 2;
+  bool done = 3;
+}
+
+message UpdateItemInfo {
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue description = 2;
+  google.protobuf.BoolValue done = 3;
+}
+
+
+message ListRequest {
+  uint64 listId = 1;
+
+}
+message ListResponse {
+  repeated Item items = 1;
+}
+
+message GetRequest {
+  uint64 id = 1;
+}
+message GetResponse {
+  Item item = 1;
+}
+
+message CreateRequest {
+  uint64 listId = 1;
+  ItemInfo info= 2;
+}
+message CreateResponse {
+  uint64 id = 1;
+}
+
+message UpdateRequest {
+  uint64 id = 1;
+  UpdateItemInfo info = 2;
+}
+
+message DeleteRequest {
+  uint64 id = 1;
+}

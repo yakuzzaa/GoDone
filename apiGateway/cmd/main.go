@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/yakuzzaa/GoDone/apiGateway"
-	_ "github.com/yakuzzaa/GoDone/apiGateway/cmd/docs"
+	_ "github.com/yakuzzaa/GoDone/apiGateway/docs"
 	"github.com/yakuzzaa/GoDone/apiGateway/internal/config"
 	"github.com/yakuzzaa/GoDone/apiGateway/pkg/handler"
 	"log"

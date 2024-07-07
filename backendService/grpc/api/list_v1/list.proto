@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package list;
+option go_package = "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/list_v1;list_v1";
+
+service ListV1 {
+  rpc List (ListRequest) returns (ListResponse);
+  rpc GetDetail (GetListRequest) returns (DetailResponse);
+  rpc CreateList (CreateRequest) returns (CreateResponse);
+  rpc UpdateList (UpdateRequest) returns (google.protobuf.Empty);
+  rpc DeleteList (DeleteRequest) returns (google.protobuf.Empty);
+}
+
+message ListInfo {
+  string title = 1;
+  string description = 2;
+}
+
+message List {
+  uint64 id = 1;
+  ListInfo info = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message Item {
+  uint64 id = 1;
+  ItemInfo info = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+
+message ItemInfo {
+  string title = 1;
+  string description = 2;
+  bool done = 3;
+}
+
+message ListWithItems {
+  List list = 1;
+  repeated  Item items = 2;
+}
+
+message UpdateList {
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue description = 2;
+}
+
+message ListRequest {
+  uint64 user_id =1;
+}
+message ListResponse {
+  repeated List lists = 1;
+}
+
+message GetListRequest {
+  uint64 id = 1;
+}
+message GetListResponse {
+  List list = 1;
+}
+
+message DetailResponse {
+  ListWithItems list = 1;
+}
+
+
+message CreateRequest {
+  uint64 user_id = 1;
+  ListInfo info = 2;
+}
+
+message CreateResponse {
+  uint64 id = 1;
+}
+
+message UpdateRequest {
+  uint64 id = 1;
+  UpdateList info = 2;
+}
+
+message DeleteRequest {
+  uint64 id = 1;
+}
