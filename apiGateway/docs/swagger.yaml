@@ -1,4 +1,115 @@
+basePath: /
+definitions:
+  serializer.ErrorResponse:
+    properties:
+      error: {}
+    type: object
+  serializer.SignInInfo:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  serializer.SignInRequest:
+    properties:
+      info:
+        $ref: '#/definitions/serializer.SignInInfo'
+    type: object
+  serializer.SignInResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  serializer.SignUpInfo:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  serializer.SignUpRequest:
+    properties:
+      info:
+        $ref: '#/definitions/serializer.SignUpInfo'
+    type: object
+  serializer.SignUpResponse:
+    properties:
+      token:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact: {}
-paths: {}
+  description: Simple To-Do list backend
+  title: GoDone API
+  version: "1.0"
+paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Sign in a user
+      parameters:
+      - description: SignInRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.SignInResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: User sign-in
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Sign up a user and get token
+      parameters:
+      - description: SignInRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.SignUpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: User sign-up
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
