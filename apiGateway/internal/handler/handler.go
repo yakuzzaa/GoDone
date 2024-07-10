@@ -4,12 +4,26 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1"
+	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/item_v1"
+	"github.com/yakuzzaa/GoDone/backendService/grpc/pkg/list_v1"
 )
 
-type Handler struct {
+type ApiHandler struct {
+	authClient auth_v1.AuthV1Client
+	listClient list_v1.ListV1Client
+	itemClient item_v1.ItemV1Client
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func NewHandler(authClient auth_v1.AuthV1Client, listClient list_v1.ListV1Client, itemClient item_v1.ItemV1Client) *ApiHandler {
+	return &ApiHandler{
+		authClient: authClient,
+		listClient: listClient,
+		itemClient: itemClient,
+	}
+}
+
+func (h *ApiHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	docs := router.Group("/docs")
 	{
@@ -22,6 +36,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 
 	api := router.Group("/api")
+	api.Use(h.authMiddleware())
 	{
 		lists := api.Group("/lists")
 		{

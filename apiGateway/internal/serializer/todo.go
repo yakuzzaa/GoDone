@@ -1,4 +1,4 @@
-package apiGateway
+package serializer
 
 type TodoList struct {
 	Id          int    `json:"id"`

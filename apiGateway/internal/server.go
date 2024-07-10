@@ -1,9 +1,15 @@
-package apiGateway
+package internal
 
 import (
 	"context"
 	"net/http"
 	"time"
+)
+
+const (
+	maxHeaderBytes = 1 << 20
+	readTimeout    = 10 * time.Second
+	writeTimeout   = 10 * time.Second
 )
 
 type Server struct {
@@ -14,9 +20,9 @@ func (s *Server) Run(address string, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           address,
 		Handler:        handler,
-		MaxHeaderBytes: 1 << 20,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: maxHeaderBytes,
+		ReadTimeout:    readTimeout,
+		WriteTimeout:   writeTimeout,
 	}
 	return s.httpServer.ListenAndServe()
 }
