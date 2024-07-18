@@ -26,7 +26,3 @@ type SignUpRequest struct {
 type SignUpResponse struct {
 	Token string `json:"token"`
 }
-
-type ErrorResponse struct {
-	Error error `json:"error"`
-}

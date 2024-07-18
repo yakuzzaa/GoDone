@@ -10,7 +10,7 @@ import (
 
 type ListServiceInterface interface {
 	CreateList(listInfo *list_v1.ListInfo, userId uint64) (uint64, error)
-	GetListById(id uint64) (*list_v1.List, []*list_v1.Item, error)
+	GetListById(id uint64, userId uint64) (*list_v1.List, []*list_v1.Item, error)
 	GetList(userId uint64) (*[]*list_v1.List, error)
 	Update(id uint64, updateInfo *list_v1.UpdateList) error
 	Delete(ctx context.Context, id uint64) error
@@ -31,8 +31,8 @@ func (l *ListService) CreateList(listInfo *list_v1.ListInfo, userId uint64) (uin
 	return listId, nil
 }
 
-func (l *ListService) GetListById(id uint64) (*list_v1.List, []*list_v1.Item, error) {
-	detail, err := l.repo.GetById(id)
+func (l *ListService) GetListById(id uint64, userId uint64) (*list_v1.List, []*list_v1.Item, error) {
+	detail, err := l.repo.GetById(id, userId)
 	if err != nil {
 		return nil, nil, err
 	}

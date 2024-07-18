@@ -10,6 +10,8 @@ import (
 	auth "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/auth_v1"
 )
 
+const tokenTTL = 24 * time.Hour
+
 // sign-in handles the user sign-in process.
 // @Summary User sign-in
 // @Description Sign in a user
@@ -25,7 +27,7 @@ func (h *ApiHandler) signIn(c *gin.Context) {
 	var req auth.SignInRequest
 
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err})
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
 
@@ -34,7 +36,7 @@ func (h *ApiHandler) signIn(c *gin.Context) {
 
 	resp, err := h.authClient.SignIn(ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err})
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
 
@@ -57,7 +59,7 @@ func (h *ApiHandler) signUp(c *gin.Context) {
 	var req auth.SignUpRequest
 
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err})
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
 
@@ -66,9 +68,20 @@ func (h *ApiHandler) signUp(c *gin.Context) {
 
 	resp, err := h.authClient.SignUp(ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err})
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
+
+	cookie := &http.Cookie{
+		Name:     "access_token",
+		Value:    resp.Token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		MaxAge:   int(tokenTTL.Seconds()),
+	}
+
+	http.SetCookie(c.Writer, cookie)
 
 	c.JSON(http.StatusOK, serializer.SignUpResponse{Token: resp.Token})
 }

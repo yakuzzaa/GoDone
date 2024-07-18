@@ -12,7 +12,7 @@ import (
 type ListRepositoryInterface interface {
 	Create(listInfo *list_v1.ListInfo, userId uint64) (uint64, error)
 	List(userId uint64) ([]models.ToDoList, error)
-	GetById(id uint64) (*models.ToDoList, error)
+	GetById(id uint64, userId uint64) (*models.ToDoList, error)
 	Update(id uint64, listInfo *list_v1.UpdateList) error
 	Delete(ctx context.Context, id uint64) error
 }
@@ -46,9 +46,9 @@ func (l *ListRepository) List(userId uint64) ([]models.ToDoList, error) {
 	return lists, nil
 }
 
-func (l *ListRepository) GetById(id uint64) (*models.ToDoList, error) {
+func (l *ListRepository) GetById(id uint64, userId uint64) (*models.ToDoList, error) {
 	var list models.ToDoList
-	if err := l.db.Preload("Items").Where("id = ?", id).First(&list).Error; err != nil {
+	if err := l.db.Preload("Items").Where("id = ?, user_id = ?", id, userId).First(&list).Error; err != nil {
 		return nil, err
 	}
 	return &list, nil

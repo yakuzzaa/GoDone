@@ -1,8 +1,61 @@
 basePath: /
 definitions:
+  serializer.CreateListRequest:
+    properties:
+      info:
+        $ref: '#/definitions/serializer.ListInfo'
+    type: object
+  serializer.CreateListResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  serializer.DeleteListRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  serializer.DeleteListResponse:
+    properties:
+      status:
+        type: string
+    type: object
   serializer.ErrorResponse:
     properties:
-      error: {}
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+  serializer.List:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/serializer.ListInfo'
+      updated_at:
+        type: string
+    type: object
+  serializer.ListByIdRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  serializer.ListInfo:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  serializer.ListsResponse:
+    properties:
+      lists:
+        items:
+          $ref: '#/definitions/serializer.List'
+        type: array
     type: object
   serializer.SignInInfo:
     properties:
@@ -40,6 +93,25 @@ definitions:
       token:
         type: string
     type: object
+  serializer.UpdateListInfo:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  serializer.UpdateListRequest:
+    properties:
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/serializer.UpdateListInfo'
+    type: object
+  serializer.UpdateListResponse:
+    properties:
+      status:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -47,6 +119,146 @@ info:
   title: GoDone API
   version: "1.0"
 paths:
+  /api/lists:
+    get:
+      consumes:
+      - application/json
+      description: Get user to-do lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.ListsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Get Lists
+      tags:
+      - list
+    post:
+      consumes:
+      - application/json
+      description: Create user to-do list
+      parameters:
+      - description: CreateListRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.CreateListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.CreateListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Create List
+      tags:
+      - list
+  /api/lists/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user to-do list
+      parameters:
+      - description: DeleteListRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.DeleteListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.DeleteListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Delete List
+      tags:
+      - list
+    get:
+      consumes:
+      - application/json
+      description: Get user to-do list by id
+      parameters:
+      - description: ListByIdRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.ListByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.CreateListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Get List by id
+      tags:
+      - list
+    put:
+      consumes:
+      - application/json
+      description: Update user to-do list
+      parameters:
+      - description: UpdateListRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.UpdateListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.UpdateListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Update List
+      tags:
+      - list
   /auth/sign-in:
     post:
       consumes:

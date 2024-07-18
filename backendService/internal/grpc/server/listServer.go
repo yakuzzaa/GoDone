@@ -42,8 +42,8 @@ func (l *ListServer) List(ctx context.Context, req *list_v1.ListRequest) (*list_
 	return response, nil
 }
 
-func (l *ListServer) GetDetail(ctx context.Context, req *list_v1.GetListRequest) (*list_v1.DetailResponse, error) {
-	list, items, err := l.Service.GetListById(req.Id)
+func (l *ListServer) GetDetail(ctx context.Context, req *list_v1.DetailRequest) (*list_v1.DetailResponse, error) {
+	list, items, err := l.Service.GetListById(req.Id, req.UserId)
 	if err != nil {
 		return &list_v1.DetailResponse{}, status.Errorf(codes.Internal, "failed to get detail: %v", err)
 	}
