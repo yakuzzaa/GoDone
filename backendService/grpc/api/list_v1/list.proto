@@ -9,7 +9,7 @@ option go_package = "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/list_v1;
 
 service ListV1 {
   rpc List (ListRequest) returns (ListResponse);
-  rpc GetDetail (GetListRequest) returns (DetailResponse);
+  rpc GetDetail (DetailRequest) returns (DetailResponse);
   rpc CreateList (CreateRequest) returns (CreateResponse);
   rpc UpdateList (UpdateRequest) returns (google.protobuf.Empty);
   rpc DeleteList (DeleteRequest) returns (google.protobuf.Empty);
@@ -58,11 +58,9 @@ message ListResponse {
   repeated List lists = 1;
 }
 
-message GetListRequest {
+message DetailRequest {
   uint64 id = 1;
-}
-message GetListResponse {
-  List list = 1;
+  uint64 user_id = 2;
 }
 
 message DetailResponse {

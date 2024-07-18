@@ -3,8 +3,6 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -16,21 +14,30 @@ const (
 
 func (h *ApiHandler) authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
+		//authHeader := c.GetHeader("Authorization")
+		cookie, err := c.Request.Cookie("access_token")
+		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization is required"})
 			c.Abort()
 			return
-		}
 
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header format"})
-			c.Abort()
-			return
 		}
+		token := cookie.Value
+		//log.Println("authHeader", authHeader)
+		//if authHeader == "" {
+		//	c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization is required"})
+		//	c.Abort()
+		//	return
+		//}
 
-		token := parts[1]
+		//parts := strings.Split(authHeader, " ")
+		//if len(parts) != 2 || parts[0] != "Bearer" {
+		//	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header format"})
+		//	c.Abort()
+		//	return
+		//}
+
+		//token := parts[1]
 		verifiedToken, err := verifyToken(token)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, err)
@@ -43,7 +50,7 @@ func (h *ApiHandler) authMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("userID", userId)
+		c.Set("userId", userId)
 
 		c.Next()
 	}
@@ -69,21 +76,14 @@ func verifyToken(accessToken string) (*jwt.Token, error) {
 }
 
 func userIDFromToken(token *jwt.Token) (uint64, error) {
-
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
 		return 0, fmt.Errorf("invalid token claims")
 	}
 
-	userIdStr, ok := claims["userId"].(string)
-	if !ok {
-		return 0, fmt.Errorf("userId not found in token claims")
+	if userIdFloat, ok := claims["userId"].(float64); ok {
+		return uint64(userIdFloat), nil
 	}
 
-	userId, err := strconv.ParseUint(userIdStr, 10, 64)
-	if err != nil {
-		return 0, fmt.Errorf("invalid userId format in token claims")
-	}
-
-	return userId, nil
+	return 0, fmt.Errorf("invalid token")
 }

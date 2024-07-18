@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -25,6 +26,12 @@ func NewHandler(authClient auth_v1.AuthV1Client, listClient list_v1.ListV1Client
 
 func (h *ApiHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"} // Разрешить все домены
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	router.Use(cors.New(config))
+
 	docs := router.Group("/docs")
 	{
 		docs.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
