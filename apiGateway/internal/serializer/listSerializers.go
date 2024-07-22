@@ -34,7 +34,7 @@ type ListsResponse struct {
 
 type ListByIdRequest struct {
 	ListId uint64 `json:"id"`
-	UserId uint64 `json:"user_id"`
+	UserId uint64 `json:"_"`
 }
 
 type ListByIdResponse struct {

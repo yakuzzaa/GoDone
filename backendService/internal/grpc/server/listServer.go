@@ -57,7 +57,7 @@ func (l *ListServer) GetDetail(ctx context.Context, req *list_v1.DetailRequest) 
 }
 
 func (l *ListServer) UpdateList(ctx context.Context, req *list_v1.UpdateRequest) (*emptypb.Empty, error) {
-	err := l.Service.Update(req.Id, req.Info)
+	err := l.Service.Update(req.Id, req.UserId, req.Info)
 	if err != nil {
 		return &emptypb.Empty{}, status.Errorf(codes.Internal, "failed to update list: %v", err)
 	}
@@ -65,7 +65,7 @@ func (l *ListServer) UpdateList(ctx context.Context, req *list_v1.UpdateRequest)
 }
 
 func (l *ListServer) DeleteList(ctx context.Context, req *list_v1.DeleteRequest) (*emptypb.Empty, error) {
-	err := l.Service.Delete(ctx, req.Id)
+	err := l.Service.Delete(ctx, req.Id, req.UserId)
 	if err != nil {
 		return &emptypb.Empty{}, status.Errorf(codes.Internal, "failed to delete list: %v", err)
 	}

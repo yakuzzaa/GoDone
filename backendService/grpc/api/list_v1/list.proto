@@ -79,9 +79,11 @@ message CreateResponse {
 
 message UpdateRequest {
   uint64 id = 1;
-  UpdateList info = 2;
+  uint64 user_id = 2;
+  UpdateList info = 3;
 }
 
 message DeleteRequest {
   uint64 id = 1;
+  uint64 user_id = 2;
 }

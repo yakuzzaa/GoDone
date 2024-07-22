@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/yakuzzaa/GoDone/apiGateway/internal/converter"
@@ -80,25 +81,33 @@ func (h *ApiHandler) getAllLists(c *gin.Context) {
 // @Tags list
 // @Accept  json
 // @Produce  json
-// @Param   request body  serializer.ListByIdRequest true "ListByIdRequest"
+// @Param id path string true "User ID"
 // @Success 200 {object} serializer.CreateListResponse
 // @Failure 400 {object} serializer.ErrorResponse
 // @Failure 500 {object} serializer.ErrorResponse
 // @Router /api/lists/{id} [get]
 func (h *ApiHandler) getListById(c *gin.Context) {
-	var req list.DetailResponse
+	var req list.DetailRequest
+	var err error
+	idStr := c.Param("id")
+	req.Id, err = strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+	}
+
 	userId, ok := c.Get("userId")
 	if !ok {
 		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Message: "Invalid Token"})
 	}
+	req.UserId = userId.(uint64)
 
-	resp, err := h.listClient.List(c, &req)
+	resp, err := h.listClient.GetDetail(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	respJson, err := converter.MarshalGetResponse(resp)
+	respJson, err := converter.MarshalDetailResponse(resp)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 	}
@@ -118,6 +127,34 @@ func (h *ApiHandler) getListById(c *gin.Context) {
 // @Failure 500 {object} serializer.ErrorResponse
 // @Router /api/lists/{id} [put]
 func (h *ApiHandler) updateList(c *gin.Context) {
+	var req list.UpdateRequest
+	var err error
+	idStr := c.Param("id")
+	req.Id, err = strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+	}
+
+	userId, ok := c.Get("userId")
+	if !ok {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Message: "Invalid Token"})
+	}
+	req.UserId = userId.(uint64)
+
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	_, err = h.listClient.UpdateList(c, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, serializer.UpdateListResponse{
+		Status: "Updated",
+	})
 
 }
 
@@ -133,5 +170,27 @@ func (h *ApiHandler) updateList(c *gin.Context) {
 // @Failure 500 {object} serializer.ErrorResponse
 // @Router /api/lists/{id} [delete]
 func (h *ApiHandler) deleteList(c *gin.Context) {
+	var req list.DeleteRequest
+	var err error
+	idStr := c.Param("id")
+	req.Id, err = strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+	}
 
+	userId, ok := c.Get("userId")
+	if !ok {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Message: "Invalid Token"})
+	}
+	req.UserId = userId.(uint64)
+
+	_, err = h.listClient.DeleteList(c, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, serializer.UpdateListResponse{
+		Status: "Deleted",
+	})
 }

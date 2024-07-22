@@ -38,11 +38,6 @@ definitions:
       updated_at:
         type: string
     type: object
-  serializer.ListByIdRequest:
-    properties:
-      id:
-        type: integer
-    type: object
   serializer.ListInfo:
     properties:
       description:
@@ -206,12 +201,11 @@ paths:
       - application/json
       description: Get user to-do list by id
       parameters:
-      - description: ListByIdRequest
-        in: body
-        name: request
+      - description: User ID
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/serializer.ListByIdRequest'
+        type: string
       produces:
       - application/json
       responses:

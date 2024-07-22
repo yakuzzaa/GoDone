@@ -13,8 +13,8 @@ type ListRepositoryInterface interface {
 	Create(listInfo *list_v1.ListInfo, userId uint64) (uint64, error)
 	List(userId uint64) ([]models.ToDoList, error)
 	GetById(id uint64, userId uint64) (*models.ToDoList, error)
-	Update(id uint64, listInfo *list_v1.UpdateList) error
-	Delete(ctx context.Context, id uint64) error
+	Update(id uint64, userId uint64, listInfo *list_v1.UpdateList) error
+	Delete(ctx context.Context, id uint64, userId uint64) error
 }
 type ListRepository struct {
 	db *gorm.DB
@@ -48,14 +48,14 @@ func (l *ListRepository) List(userId uint64) ([]models.ToDoList, error) {
 
 func (l *ListRepository) GetById(id uint64, userId uint64) (*models.ToDoList, error) {
 	var list models.ToDoList
-	if err := l.db.Preload("Items").Where("id = ?, user_id = ?", id, userId).First(&list).Error; err != nil {
+	if err := l.db.Preload("Items").Where("id = ? AND user_id = ?", id, userId).First(&list).Error; err != nil {
 		return nil, err
 	}
 	return &list, nil
 }
 
-func (l *ListRepository) Update(id uint64, listInfo *list_v1.UpdateList) error {
-	list, err := l.IsListExist(id)
+func (l *ListRepository) Update(id uint64, userId uint64, listInfo *list_v1.UpdateList) error {
+	list, err := l.IsListExist(id, userId)
 	if err != nil {
 		return err
 	}
@@ -73,10 +73,10 @@ func (l *ListRepository) Update(id uint64, listInfo *list_v1.UpdateList) error {
 	return nil
 }
 
-func (l *ListRepository) Delete(ctx context.Context, id uint64) error {
+func (l *ListRepository) Delete(ctx context.Context, id uint64, userId uint64) error {
 	tx := l.db.WithContext(ctx).Begin()
 
-	if err := tx.WithContext(ctx).Where("to_do_list_id = ?", id).Delete(&[]models.Item{}).Error; err != nil {
+	if err := tx.WithContext(ctx).Where("to_do_list_id = ? AND user_id = ?", id, userId).Delete(&[]models.Item{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -92,9 +92,9 @@ func (l *ListRepository) Delete(ctx context.Context, id uint64) error {
 	return tx.Commit().Error
 }
 
-func (l *ListRepository) IsListExist(id uint64) (*models.ToDoList, error) {
+func (l *ListRepository) IsListExist(id uint64, userId uint64) (*models.ToDoList, error) {
 	var list *models.ToDoList
-	if err := l.db.Where("id = ?", id).First(&list).Error; err != nil {
+	if err := l.db.Where("id = ? AND user_id = ?", id, userId).First(&list).Error; err != nil {
 		return &models.ToDoList{}, err
 	}
 	return list, nil

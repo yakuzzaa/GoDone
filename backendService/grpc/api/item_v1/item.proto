@@ -38,6 +38,7 @@ message UpdateItemInfo {
 
 message ListRequest {
   uint64 listId = 1;
+  uint64 user_id = 2;
 
 }
 message ListResponse {
@@ -46,6 +47,7 @@ message ListResponse {
 
 message GetRequest {
   uint64 id = 1;
+  uint64 user_id = 2;
 }
 message GetResponse {
   Item item = 1;
@@ -53,7 +55,8 @@ message GetResponse {
 
 message CreateRequest {
   uint64 listId = 1;
-  ItemInfo info= 2;
+  uint64 user_id = 2;
+  ItemInfo info= 3;
 }
 message CreateResponse {
   uint64 id = 1;
@@ -61,9 +64,11 @@ message CreateResponse {
 
 message UpdateRequest {
   uint64 id = 1;
-  UpdateItemInfo info = 2;
+  uint64 user_id = 2;
+  UpdateItemInfo info = 3;
 }
 
 message DeleteRequest {
   uint64 id = 1;
+  uint64 user_id = 2;
 }

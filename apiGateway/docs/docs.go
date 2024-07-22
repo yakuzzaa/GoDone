@@ -109,13 +109,11 @@ const docTemplate = `{
                 "summary": "Get List by id",
                 "parameters": [
                     {
-                        "description": "ListByIdRequest",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/serializer.ListByIdRequest"
-                        }
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -379,14 +377,6 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
-                }
-            }
-        },
-        "serializer.ListByIdRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
                 }
             }
         },

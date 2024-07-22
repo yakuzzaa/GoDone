@@ -12,8 +12,8 @@ type ListServiceInterface interface {
 	CreateList(listInfo *list_v1.ListInfo, userId uint64) (uint64, error)
 	GetListById(id uint64, userId uint64) (*list_v1.List, []*list_v1.Item, error)
 	GetList(userId uint64) (*[]*list_v1.List, error)
-	Update(id uint64, updateInfo *list_v1.UpdateList) error
-	Delete(ctx context.Context, id uint64) error
+	Update(id uint64, userId uint64, updateInfo *list_v1.UpdateList) error
+	Delete(ctx context.Context, id uint64, userId uint64) error
 }
 type ListService struct {
 	repo repository.ListRepositoryInterface
@@ -88,16 +88,16 @@ func (l *ListService) GetList(userId uint64) (*[]*list_v1.List, error) {
 	return &protoLists, nil
 }
 
-func (l *ListService) Update(id uint64, updateInfo *list_v1.UpdateList) error {
-	err := l.repo.Update(id, updateInfo)
+func (l *ListService) Update(id uint64, userId uint64, updateInfo *list_v1.UpdateList) error {
+	err := l.repo.Update(id, userId, updateInfo)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (l *ListService) Delete(ctx context.Context, id uint64) error {
-	err := l.repo.Delete(ctx, id)
+func (l *ListService) Delete(ctx context.Context, id uint64, userId uint64) error {
+	err := l.repo.Delete(ctx, id, userId)
 	if err != nil {
 		return err
 	}
