@@ -7,11 +7,11 @@ import (
 )
 
 type ItemServiceInterface interface {
-	CreateItem(listId uint64, itemInfo *item_v1.ItemInfo) (uint64, error)
-	GetList(listId uint64) (*[]*item_v1.Item, error)
-	GetById(itemId uint64) (*item_v1.Item, error)
-	Update(itemId uint64, updateInfo *item_v1.UpdateItemInfo) error
-	Delete(itemId uint64) error
+	CreateItem(listId uint64, userId uint64, itemInfo *item_v1.ItemInfo) (uint64, error)
+	GetList(listId uint64, userId uint64) (*[]*item_v1.Item, error)
+	GetById(itemId uint64, userId uint64) (*item_v1.Item, error)
+	Update(itemId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error
+	Delete(itemId uint64, userId uint64) error
 }
 
 type ItemService struct {
@@ -22,16 +22,16 @@ func NewItemRepository(repo repository.ItemRepositoryInterface) ItemServiceInter
 	return &ItemService{repo: repo}
 }
 
-func (i *ItemService) CreateItem(listId uint64, itemInfo *item_v1.ItemInfo) (uint64, error) {
-	itemId, err := i.repo.Create(listId, itemInfo)
+func (i *ItemService) CreateItem(listId uint64, userId uint64, itemInfo *item_v1.ItemInfo) (uint64, error) {
+	itemId, err := i.repo.Create(listId, userId, itemInfo)
 	if err != nil {
 		return 0, err
 	}
 	return itemId, nil
 }
 
-func (i *ItemService) GetList(listId uint64) (*[]*item_v1.Item, error) {
-	items, err := i.repo.List(listId)
+func (i *ItemService) GetList(listId uint64, userId uint64) (*[]*item_v1.Item, error) {
+	items, err := i.repo.List(listId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +55,8 @@ func (i *ItemService) GetList(listId uint64) (*[]*item_v1.Item, error) {
 	return &protoItems, nil
 }
 
-func (i *ItemService) GetById(itemId uint64) (*item_v1.Item, error) {
-	item, err := i.repo.GetById(itemId)
+func (i *ItemService) GetById(itemId uint64, userId uint64) (*item_v1.Item, error) {
+	item, err := i.repo.GetById(itemId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -74,16 +74,16 @@ func (i *ItemService) GetById(itemId uint64) (*item_v1.Item, error) {
 	return protoItem, nil
 }
 
-func (i *ItemService) Update(itemId uint64, updateInfo *item_v1.UpdateItemInfo) error {
-	err := i.repo.Update(itemId, updateInfo)
+func (i *ItemService) Update(itemId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error {
+	err := i.repo.Update(itemId, userId, updateInfo)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (i *ItemService) Delete(itemId uint64) error {
-	err := i.repo.Delete(itemId)
+func (i *ItemService) Delete(itemId uint64, userId uint64) error {
+	err := i.repo.Delete(itemId, userId)
 	if err != nil {
 		return err
 	}

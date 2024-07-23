@@ -20,7 +20,7 @@ func NewItemServer(service service.ItemServiceInterface) *ItemServer {
 }
 
 func (i *ItemServer) CreateItem(ctx context.Context, req *item_v1.CreateRequest) (*item_v1.CreateResponse, error) {
-	createItem, err := i.Service.CreateItem(req.ListId, req.Info)
+	createItem, err := i.Service.CreateItem(req.ListId, req.UserId, req.Info)
 	if err != nil {
 		return &item_v1.CreateResponse{}, status.Errorf(codes.Internal, "failed to create item: %v", err)
 	}
@@ -28,7 +28,7 @@ func (i *ItemServer) CreateItem(ctx context.Context, req *item_v1.CreateRequest)
 }
 
 func (i *ItemServer) ListItem(ctx context.Context, req *item_v1.ListRequest) (*item_v1.ListResponse, error) {
-	items, err := i.Service.GetList(req.ListId)
+	items, err := i.Service.GetList(req.ListId, req.UserId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get item list: %v", err)
 	}
@@ -43,7 +43,7 @@ func (i *ItemServer) ListItem(ctx context.Context, req *item_v1.ListRequest) (*i
 }
 
 func (i *ItemServer) GetItem(ctx context.Context, req *item_v1.GetRequest) (*item_v1.GetResponse, error) {
-	item, err := i.Service.GetById(req.Id)
+	item, err := i.Service.GetById(req.Id, req.UserId)
 	if err != nil {
 		return &item_v1.GetResponse{}, status.Errorf(codes.Internal, "failed to get item: %v", err)
 	}
@@ -54,7 +54,7 @@ func (i *ItemServer) GetItem(ctx context.Context, req *item_v1.GetRequest) (*ite
 }
 
 func (i *ItemServer) UpdateItem(ctx context.Context, req *item_v1.UpdateRequest) (*emptypb.Empty, error) {
-	err := i.Service.Update(req.Id, req.Info)
+	err := i.Service.Update(req.Id, req.UserId, req.Info)
 	if err != nil {
 		return &emptypb.Empty{}, status.Errorf(codes.Internal, "failed to update item: %v", err)
 	}
@@ -62,7 +62,7 @@ func (i *ItemServer) UpdateItem(ctx context.Context, req *item_v1.UpdateRequest)
 }
 
 func (i *ItemServer) DeleteItem(ctx context.Context, req *item_v1.DeleteRequest) (*emptypb.Empty, error) {
-	err := i.Service.Delete(req.Id)
+	err := i.Service.Delete(req.Id, req.UserId)
 	if err != nil {
 		return &emptypb.Empty{}, status.Errorf(codes.Internal, "failed to delete item: %v", err)
 	}
