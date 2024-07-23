@@ -1,14 +1,16 @@
 package config
 
 import (
-	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"os"
 	"time"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {
 	Env        string `yaml:"env" env-default:"local" env-required:"true"`
+	LogPath    string `yaml:"log_path" env:"LOG_PATH" default:"logs/" required:"true"`
 	HTTPServer `yaml:"http_server"`
 }
 
