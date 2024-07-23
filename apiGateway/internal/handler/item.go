@@ -99,8 +99,11 @@ func (h *ApiHandler) getAllItems(c *gin.Context) {
 func (h *ApiHandler) getItemById(c *gin.Context) {
 	var req item.GetRequest
 	var err error
-	idStr := c.Param("list_id")
-	req, err = strconv.ParseUint(idStr, 10, 64)
+	listIdStr := c.Param("list_id")
+	req.ListId, err = strconv.ParseUint(listIdStr, 10, 64)
+	itemIdStr := c.Param("item_id")
+	req.Id, err = strconv.ParseUint(itemIdStr, 10, 64)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
 	}
@@ -111,13 +114,13 @@ func (h *ApiHandler) getItemById(c *gin.Context) {
 	}
 	req.UserId = userId.(uint64)
 
-	resp, err := h.listClient.GetDetail(c, &req)
+	resp, err := h.itemClient.GetItem(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	respJson, err := converter.MarshalDetailListResponse(resp)
+	respJson, err := converter.MarshalDetailItemResponse(resp)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 	}
@@ -139,7 +142,38 @@ func (h *ApiHandler) getItemById(c *gin.Context) {
 // @Failure 500 {object} serializer.ErrorResponse
 // @Router /api/items/{list_id}/{item_id} [put]
 func (h *ApiHandler) updateItem(c *gin.Context) {
+	var req item.UpdateRequest
+	var err error
 
+	listIdStr := c.Param("list_id")
+	req.ListId, err = strconv.ParseUint(listIdStr, 10, 64)
+	itemIdStr := c.Param("item_id")
+	req.Id, err = strconv.ParseUint(itemIdStr, 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+	}
+
+	userId, ok := c.Get("userId")
+	if !ok {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Message: "Invalid Token"})
+	}
+	req.UserId = userId.(uint64)
+
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	_, err = h.itemClient.UpdateItem(c, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, serializer.UpdateItemResponse{
+		Status: "Updated",
+	})
 }
 
 // deleteItem update item by id
@@ -155,5 +189,31 @@ func (h *ApiHandler) updateItem(c *gin.Context) {
 // @Failure 500 {object} serializer.ErrorResponse
 // @Router /api/items/{list_id}/{item_id} [delete]
 func (h *ApiHandler) deleteItem(c *gin.Context) {
+	var req item.DeleteRequest
+	var err error
 
+	listIdStr := c.Param("list_id")
+	req.ListId, err = strconv.ParseUint(listIdStr, 10, 64)
+	itemIdStr := c.Param("item_id")
+	req.Id, err = strconv.ParseUint(itemIdStr, 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Error: err.Error()})
+	}
+
+	userId, ok := c.Get("userId")
+	if !ok {
+		c.JSON(http.StatusBadRequest, serializer.ErrorResponse{Message: "Invalid Token"})
+	}
+	req.UserId = userId.(uint64)
+
+	_, err = h.itemClient.DeleteItem(c, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, serializer.DeleteItemResponse{
+		Status: "Deleted",
+	})
 }

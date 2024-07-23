@@ -32,6 +32,11 @@ definitions:
       message:
         type: string
     type: object
+  serializer.GetItemResponse:
+    properties:
+      item:
+        $ref: '#/definitions/serializer.Item'
+    type: object
   serializer.Item:
     properties:
       create_at:
@@ -281,7 +286,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/serializer.ListItemResponse'
+            $ref: '#/definitions/serializer.GetItemResponse'
         "400":
           description: Bad Request
           schema:

@@ -110,6 +110,8 @@ github.com/yakuzzaa/GoDone/backendService v0.0.0-20240722121134-b1a4b5f28356 h1:
 github.com/yakuzzaa/GoDone/backendService v0.0.0-20240722121134-b1a4b5f28356/go.mod h1:ULv78MAcDykjW5dI+9VwxQYnRGHw500Tc4ZQWiOewy0=
 github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723174058-6d96d6e738ae h1:su1WtIbkuZD/Bzq9o26WnIxXAGJurljkiwTQPeS023I=
 github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723174058-6d96d6e738ae/go.mod h1:ULv78MAcDykjW5dI+9VwxQYnRGHw500Tc4ZQWiOewy0=
+github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723183135-ce6cc304f411 h1:/T4UrurTsyuxA2pEqTu5+X+6w1wy0f77L6ljDft1DW4=
+github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723183135-ce6cc304f411/go.mod h1:ULv78MAcDykjW5dI+9VwxQYnRGHw500Tc4ZQWiOewy0=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/arch v0.0.0-20210923205945-b76863e36670/go.mod h1:5om86z9Hs0C8fWVUuoMHwpExlXzs5Tkyp9hOrfG7pp8=
 golang.org/x/arch v0.8.0 h1:3wRIsP3pM4yUptoR96otTUOXI367OS0+c9eeRi9doIc=

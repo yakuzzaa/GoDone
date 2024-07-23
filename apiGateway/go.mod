@@ -11,7 +11,7 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.3
-	github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723174058-6d96d6e738ae
+	github.com/yakuzzaa/GoDone/backendService v0.0.0-20240723183135-ce6cc304f411
 	google.golang.org/grpc v1.65.0
 )
 

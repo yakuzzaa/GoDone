@@ -143,7 +143,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/serializer.ListItemResponse"
+                            "$ref": "#/definitions/serializer.GetItemResponse"
                         }
                     },
                     "400": {
@@ -626,6 +626,14 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "serializer.GetItemResponse": {
+            "type": "object",
+            "properties": {
+                "item": {
+                    "$ref": "#/definitions/serializer.Item"
                 }
             }
         },
