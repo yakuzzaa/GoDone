@@ -10,10 +10,10 @@ import (
 
 type ItemRepositoryInterface interface {
 	List(listId uint64, userId uint64) ([]models.Item, error)
-	GetById(itemId uint64, userId uint64) (*models.Item, error)
+	GetById(itemId uint64, listId uint64, userId uint64) (*models.Item, error)
 	Create(listId uint64, userId uint64, itemInfo *item_v1.ItemInfo) (uint64, error)
-	Update(itemId uint64, userId uint64, itemInfo *item_v1.UpdateItemInfo) error
-	Delete(itemId uint64, userId uint64) error
+	Update(itemId uint64, listId uint64, userId uint64, itemInfo *item_v1.UpdateItemInfo) error
+	Delete(itemId uint64, listId uint64, userId uint64) error
 }
 
 type ItemRepository struct {
@@ -32,9 +32,14 @@ func (i *ItemRepository) List(listId uint64, userId uint64) ([]models.Item, erro
 	return items, nil
 }
 
-func (i *ItemRepository) GetById(itemId uint64, userId uint64) (*models.Item, error) {
+func (i *ItemRepository) GetById(itemId uint64, listId uint64, userId uint64) (*models.Item, error) {
+	_, err := i.IsListExist(listId, userId)
+	if err != nil {
+		return nil, err
+	}
+
 	var item models.Item
-	if err := i.db.Preload("Items").Where("id = ? AND user_id = ?", itemId, userId).First(&item).Error; err != nil {
+	if err := i.db.Preload("Items").Where("id = ? AND to_do_list_id = ?", itemId, listId).First(&item).Error; err != nil {
 		return nil, err
 	}
 	return &item, nil
@@ -60,12 +65,13 @@ func (i *ItemRepository) Create(listId uint64, userId uint64, itemInfo *item_v1.
 	return uint64(item.ID), nil
 }
 
-func (i *ItemRepository) Update(itemId uint64, userId uint64, itemInfo *item_v1.UpdateItemInfo) error {
-	item, err := i.IsItemExist(itemId)
+func (i *ItemRepository) Update(itemId uint64, listId uint64, userId uint64, itemInfo *item_v1.UpdateItemInfo) error {
+	_, err := i.IsListExist(listId, userId)
 	if err != nil {
 		return err
 	}
-	_, err = i.IsListExist(uint64(item.ToDoListID), userId)
+
+	item, err := i.IsItemExist(itemId)
 	if err != nil {
 		return err
 	}
@@ -84,12 +90,12 @@ func (i *ItemRepository) Update(itemId uint64, userId uint64, itemInfo *item_v1.
 	return nil
 }
 
-func (i *ItemRepository) Delete(itemId uint64, userId uint64) error {
-	item, err := i.IsItemExist(itemId)
+func (i *ItemRepository) Delete(itemId uint64, listId uint64, userId uint64) error {
+	_, err := i.IsItemExist(itemId)
 	if err != nil {
 		return err
 	}
-	_, err = i.IsListExist(uint64(item.ToDoListID), userId)
+	_, err = i.IsListExist(listId, userId)
 	if err != nil {
 		return err
 	}

@@ -67,7 +67,7 @@ func (h *ApiHandler) getAllLists(c *gin.Context) {
 		return
 	}
 
-	respJson, err := converter.MarshalGetResponse(resp)
+	respJson, err := converter.MarshalListGetResponse(resp)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 	}
@@ -81,7 +81,7 @@ func (h *ApiHandler) getAllLists(c *gin.Context) {
 // @Tags list
 // @Accept  json
 // @Produce  json
-// @Param id path string true "User ID"
+// @Param id path string true "List ID"
 // @Success 200 {object} serializer.CreateListResponse
 // @Failure 400 {object} serializer.ErrorResponse
 // @Failure 500 {object} serializer.ErrorResponse
@@ -107,7 +107,7 @@ func (h *ApiHandler) getListById(c *gin.Context) {
 		return
 	}
 
-	respJson, err := converter.MarshalDetailResponse(resp)
+	respJson, err := converter.MarshalDetailListResponse(resp)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, serializer.ErrorResponse{Error: err.Error()})
 	}
@@ -121,6 +121,7 @@ func (h *ApiHandler) getListById(c *gin.Context) {
 // @Tags list
 // @Accept  json
 // @Produce  json
+// @Param id path string true "List ID"
 // @Param   request body  serializer.UpdateListRequest true "UpdateListRequest"
 // @Success 200 {object} serializer.UpdateListResponse
 // @Failure 400 {object} serializer.ErrorResponse
@@ -164,7 +165,7 @@ func (h *ApiHandler) updateList(c *gin.Context) {
 // @Tags list
 // @Accept  json
 // @Produce  json
-// @Param   request body  serializer.DeleteListRequest true "DeleteListRequest"
+// @Param id path string true "List ID"
 // @Success 200 {object} serializer.DeleteListResponse
 // @Failure 400 {object} serializer.ErrorResponse
 // @Failure 500 {object} serializer.ErrorResponse

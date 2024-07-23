@@ -49,7 +49,6 @@ type CreateListResponse struct {
 }
 
 type UpdateListRequest struct {
-	ListId   uint64         `json:"id"`
 	ListInfo UpdateListInfo `json:"info"`
 }
 type DeleteListRequest struct {

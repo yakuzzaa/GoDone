@@ -1,16 +1,21 @@
 basePath: /
 definitions:
+  serializer.CreateItemRequest:
+    properties:
+      info:
+        $ref: '#/definitions/serializer.ItemInfo'
+    type: object
+  serializer.CreateItemResponse:
+    properties:
+      id:
+        type: integer
+    type: object
   serializer.CreateListRequest:
     properties:
       info:
         $ref: '#/definitions/serializer.ListInfo'
     type: object
   serializer.CreateListResponse:
-    properties:
-      id:
-        type: integer
-    type: object
-  serializer.DeleteListRequest:
     properties:
       id:
         type: integer
@@ -25,6 +30,26 @@ definitions:
       error:
         type: string
       message:
+        type: string
+    type: object
+  serializer.Item:
+    properties:
+      create_at:
+        type: string
+      id:
+        type: integer
+      info:
+        $ref: '#/definitions/serializer.ItemInfo'
+      update_at:
+        type: string
+    type: object
+  serializer.ItemInfo:
+    properties:
+      description:
+        type: string
+      done:
+        type: boolean
+      title:
         type: string
     type: object
   serializer.List:
@@ -44,6 +69,13 @@ definitions:
         type: string
       title:
         type: string
+    type: object
+  serializer.ListItemResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/serializer.Item'
+        type: array
     type: object
   serializer.ListsResponse:
     properties:
@@ -88,6 +120,25 @@ definitions:
       token:
         type: string
     type: object
+  serializer.UpdateItemInfo:
+    properties:
+      description:
+        type: string
+      done:
+        type: boolean
+      title:
+        type: string
+    type: object
+  serializer.UpdateItemRequest:
+    properties:
+      info:
+        $ref: '#/definitions/serializer.UpdateItemInfo'
+    type: object
+  serializer.UpdateItemResponse:
+    properties:
+      status:
+        type: string
+    type: object
   serializer.UpdateListInfo:
     properties:
       description:
@@ -97,8 +148,6 @@ definitions:
     type: object
   serializer.UpdateListRequest:
     properties:
-      id:
-        type: integer
       info:
         $ref: '#/definitions/serializer.UpdateListInfo'
     type: object
@@ -114,6 +163,175 @@ info:
   title: GoDone API
   version: "1.0"
 paths:
+  /api/items/{list_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get List Items
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.ListItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Get List Items
+      tags:
+      - item
+    post:
+      consumes:
+      - application/json
+      description: Create item for to-do list
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: string
+      - description: CreateItemRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.CreateItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.CreateItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Create Item
+      tags:
+      - item
+  /api/items/{list_id}/{item_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Item by id
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: string
+      - description: Item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.UpdateItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Delete Item by id
+      tags:
+      - item
+    get:
+      consumes:
+      - application/json
+      description: Get List Items
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: string
+      - description: Item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.ListItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Get Item by id
+      tags:
+      - item
+    put:
+      consumes:
+      - application/json
+      description: Get List Items
+      parameters:
+      - description: List ID
+        in: path
+        name: list_id
+        required: true
+        type: string
+      - description: Item ID
+        in: path
+        name: item_id
+        required: true
+        type: string
+      - description: UpdateItemRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.UpdateItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.UpdateItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/serializer.ErrorResponse'
+      summary: Update Item by id
+      tags:
+      - item
   /api/lists:
     get:
       consumes:
@@ -172,12 +390,11 @@ paths:
       - application/json
       description: Delete user to-do list
       parameters:
-      - description: DeleteListRequest
-        in: body
-        name: request
+      - description: List ID
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/serializer.DeleteListRequest'
+        type: string
       produces:
       - application/json
       responses:
@@ -201,7 +418,7 @@ paths:
       - application/json
       description: Get user to-do list by id
       parameters:
-      - description: User ID
+      - description: List ID
         in: path
         name: id
         required: true
@@ -229,6 +446,11 @@ paths:
       - application/json
       description: Update user to-do list
       parameters:
+      - description: List ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: UpdateListRequest
         in: body
         name: request

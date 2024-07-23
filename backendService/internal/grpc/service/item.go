@@ -9,9 +9,9 @@ import (
 type ItemServiceInterface interface {
 	CreateItem(listId uint64, userId uint64, itemInfo *item_v1.ItemInfo) (uint64, error)
 	GetList(listId uint64, userId uint64) (*[]*item_v1.Item, error)
-	GetById(itemId uint64, userId uint64) (*item_v1.Item, error)
-	Update(itemId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error
-	Delete(itemId uint64, userId uint64) error
+	GetById(itemId uint64, listId uint64, userId uint64) (*item_v1.Item, error)
+	Update(itemId uint64, listId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error
+	Delete(itemId uint64, listId uint64, userId uint64) error
 }
 
 type ItemService struct {
@@ -55,8 +55,8 @@ func (i *ItemService) GetList(listId uint64, userId uint64) (*[]*item_v1.Item, e
 	return &protoItems, nil
 }
 
-func (i *ItemService) GetById(itemId uint64, userId uint64) (*item_v1.Item, error) {
-	item, err := i.repo.GetById(itemId, userId)
+func (i *ItemService) GetById(itemId uint64, listId uint64, userId uint64) (*item_v1.Item, error) {
+	item, err := i.repo.GetById(itemId, listId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -74,16 +74,16 @@ func (i *ItemService) GetById(itemId uint64, userId uint64) (*item_v1.Item, erro
 	return protoItem, nil
 }
 
-func (i *ItemService) Update(itemId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error {
-	err := i.repo.Update(itemId, userId, updateInfo)
+func (i *ItemService) Update(itemId uint64, listId uint64, userId uint64, updateInfo *item_v1.UpdateItemInfo) error {
+	err := i.repo.Update(itemId, listId, userId, updateInfo)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (i *ItemService) Delete(itemId uint64, userId uint64) error {
-	err := i.repo.Delete(itemId, userId)
+func (i *ItemService) Delete(itemId uint64, listId uint64, userId uint64) error {
+	err := i.repo.Delete(itemId, listId, userId)
 	if err != nil {
 		return err
 	}

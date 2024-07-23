@@ -8,7 +8,7 @@ import (
 	list "github.com/yakuzzaa/GoDone/backendService/grpc/pkg/list_v1"
 )
 
-func MarshalGetResponse(response *list.ListResponse) (*serializer.ListsResponse, error) {
+func MarshalListGetResponse(response *list.ListResponse) (*serializer.ListsResponse, error) {
 	var lists []serializer.List
 	for _, l := range response.Lists {
 		var info serializer.ListInfo
@@ -36,7 +36,7 @@ func MarshalGetResponse(response *list.ListResponse) (*serializer.ListsResponse,
 	return &serializer.ListsResponse{Lists: lists}, nil
 }
 
-func MarshalDetailResponse(response *list.DetailResponse) (*serializer.ListByIdResponse, error) {
+func MarshalDetailListResponse(response *list.DetailResponse) (*serializer.ListByIdResponse, error) {
 	var apiList serializer.List
 	var apiItems []serializer.Item
 	var createdAt time.Time
