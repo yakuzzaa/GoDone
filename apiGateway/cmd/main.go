@@ -20,6 +20,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// @title GoDone API
+// @version 1.0
+// @description Simple To-Do list backend
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	configLoad := config.MustLoad()
 
@@ -46,7 +54,7 @@ func main() {
 	listClient := list_v1.NewListV1Client(conn)
 	itemClient := item_v1.NewItemV1Client(conn)
 
-	handlers := handler.NewHandler(authClient, listClient, itemClient)
+	handlers := handler.NewHandler(authClient, listClient, itemClient, logger)
 	srv := new(internal.Server)
 
 	if err := runServer(srv, configLoad.Address, handlers.InitRoutes()); err != nil {

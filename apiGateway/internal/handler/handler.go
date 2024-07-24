@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"log/slog"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -14,13 +16,15 @@ type ApiHandler struct {
 	authClient auth_v1.AuthV1Client
 	listClient list_v1.ListV1Client
 	itemClient item_v1.ItemV1Client
+	logger     *slog.Logger
 }
 
-func NewHandler(authClient auth_v1.AuthV1Client, listClient list_v1.ListV1Client, itemClient item_v1.ItemV1Client) *ApiHandler {
+func NewHandler(authClient auth_v1.AuthV1Client, listClient list_v1.ListV1Client, itemClient item_v1.ItemV1Client, logger *slog.Logger) *ApiHandler {
 	return &ApiHandler{
 		authClient: authClient,
 		listClient: listClient,
 		itemClient: itemClient,
+		logger:     logger,
 	}
 }
 
